@@ -1,26 +1,29 @@
 #include "longest_sequence.h"
-uint32_t longest_sequence(std::vector<uint32_t> &v)
+
+std::pair<uint32_t, std::vector<uint32_t>> longest_sequence(std::vector<uint32_t> &vectr)
 {
-    uint32_t count = 1;
-    std::vector<uint32_t> vcount(v.size());
-    for (uint32_t i = 0; i < v.size(); i++)
+    uint32_t n = vectr.size();
+    std::vector<uint32_t> a(n, 1); // таблица длин
+    a[0] = 1;
+    std::vector<uint32_t> pred(
+        n, -1); // таблица предков, если надо вывести и саму подпоследовательность
+    for (uint32_t i = 1; i < n; i++)
+        for (uint32_t j = 0; j < i; j++)
+            if (vectr[j] < vectr[i])
+                if (a[j] + 1 > a[i])
+                {
+                    a[i] = a[j] + 1;
+                    pred[i] = j;
+                }
+
+    uint32_t result_int = *max_element(a.begin(), a.end());
+
+    std::vector<uint32_t> result;
+    for (uint32_t cur = uint32_t(max_element(a.begin(), a.end()) - a.begin()); cur != -1;
+         cur = pred[cur])
     {
-        if (v[i] > v[i + 1])
-        {
-            vcount[i] = count;
-            count = 1;
-        }
-        else
-        {
-            vcount[i] = count;
-            count++;
-        }
+        result.push_back(vectr[cur]);
     }
-    uint32_t max = vcount[0];
-    for (uint32_t i = 1; i < vcount.size(); i++)
-    {
-        if (vcount[i] > max)
-            max = vcount[i];
-    }
-    return max;
+    std::reverse(result.begin(), result.end());
+    return {result_int, result};
 }

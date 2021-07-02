@@ -1,5 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <algorithm>
 #include <vector>
-uint32_t longest_sequence(std::vector<uint32_t> &v);
+
+std::pair<uint32_t, std::vector<uint32_t>> longest_sequence(std::vector<uint32_t> &vectr);
